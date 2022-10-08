@@ -1,4 +1,10 @@
 {
+    "name": "get-optifine-download-link",
+    "version": "1.0.0",
+    "description": "Get Optifine download link by web scraping",
+    "main": "dist/index.js",
+    "author": "TeakIvy",
+    "license": "MIT",
     "devDependencies": {
         "@types/axios": "^0.14.0",
         "@types/cheerio": "^0.22.31",

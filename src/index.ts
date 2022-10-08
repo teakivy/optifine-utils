@@ -18,13 +18,3 @@ export const getDownloadLink = async (fileName: string) => {
         }
     });
 };
-
-async function main() {
-    await getDownloadLink('OptiFine_1.19.2_HD_U_H9.jar').then(
-        (downloadLink) => {
-            console.log(downloadLink); // Log the download link
-        }
-    );
-}
-
-main();
