@@ -1,13 +1,13 @@
-# Get Optifine Download Link
+# Get Optifine Download Link (GOFDLL)
 
 > A scraper to get a file download (request) link from optifine.net
 
 ## Usage
 
 ```ts
-import gofdl from 'get-optifine-download-link';
+import gofdll from 'gofdll';
 
-gofdl.getDownloadLink('OptiFine_1.19.2_HD_U_H9.jar');
+gofdll.getDownloadLink('OptiFine_1.19.2_HD_U_H9.jar');
 ```
 
 ## Credits

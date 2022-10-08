@@ -1,7 +1,7 @@
 {
-    "name": "get-optifine-download-link",
+    "name": "gofdll",
     "version": "1.0.0",
-    "description": "Get Optifine download link by web scraping",
+    "description": "Get an Optifine download link by web scraping",
     "main": "dist/index.js",
     "author": "TeakIvy",
     "license": "MIT",
