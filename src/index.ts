@@ -190,13 +190,13 @@ const _checkFilter = (version: Version, filter?: GetVersionsFiler): boolean => {
     return true;
 };
 
-async function main() {
-    const latestVersion = await (
-        await getVersions({ minecraftVersion: '1.19.2' })
-    )[0];
+// async function main() {
+//     const latestVersion = await (
+//         await getVersions({ minecraftVersion: '1.19.2' })
+//     )[0];
 
-    latestVersion.download('./test.jar');
-    // await downloadVersion(latestVersion, 'test.jar');
-}
+//     latestVersion.download('./test.jar');
+//     // await downloadVersion(latestVersion, 'test.jar');
+// }
 
-main();
+// main();

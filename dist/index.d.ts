@@ -5,6 +5,7 @@ declare type Version = {
     minecraftVersion: string;
     published: Date;
     changelogURL: string;
+    download?: (path?: string) => Promise<void>;
     getDownloadURL: () => Promise<string>;
 };
 declare type GetVersionsFiler = {
@@ -32,5 +33,5 @@ export declare const getVersions: (filter?: GetVersionsFiler) => Promise<Version
  * @param version The version to download
  * @param path The path to download the version to
  */
-export declare const downloadVersion: (version: Version, path: string) => Promise<void>;
+export declare const downloadVersion: (version: Version, path?: string) => Promise<void>;
 export {};

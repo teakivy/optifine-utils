@@ -88,6 +88,10 @@ const getVersions = (filter) => __awaiter(void 0, void 0, void 0, function* () {
                     changelogURL,
                     getDownloadURL,
                 };
+                const download = (path) => __awaiter(void 0, void 0, void 0, function* () {
+                    return yield (0, exports.downloadVersion)(version, path);
+                });
+                version.download = download;
                 if (_checkFilter(version, filter)) {
                     versions.push(version);
                 }
@@ -109,6 +113,12 @@ const downloadVersion = (version, path) => __awaiter(void 0, void 0, void 0, fun
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const downloadURL = yield version.getDownloadURL();
+            if (!path) {
+                path = './';
+            }
+            if (path.endsWith('/')) {
+                path = path + version.fileName;
+            }
             const writer = fs_1.default.createWriteStream(path);
             const response = yield AxiosInstance({
                 url: downloadURL,
@@ -149,7 +159,7 @@ const _checkFilter = (version, filter) => {
 //     const latestVersion = await (
 //         await getVersions({ minecraftVersion: '1.19.2' })
 //     )[0];
-//     console.log(latestVersion);
+//     latestVersion.download('./test.jar');
 //     // await downloadVersion(latestVersion, 'test.jar');
 // }
 // main();
