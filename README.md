@@ -19,9 +19,11 @@ yarn add optifine-utils
 ```ts
 import OFUtils from 'optifine-utils';
 
-const downloadURL = await (
+const version = await (
     await OFUtils.getVersions({ minecraftVersion: '1.19.2' })
-)[0].getDownloadURL();
+)[0];
+
+version.download('./Optifine_1.19.2.jar');
 ```
 
 ## Docs
@@ -38,6 +40,7 @@ type Version = {
     minecraftVersion: string;
     published: Date;
     changelogURL: string;
+    download: (path?: string) => Promise<void>;
     getDownloadURL: () => Promise<string>;
 };
 ```
