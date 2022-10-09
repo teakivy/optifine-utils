@@ -87,6 +87,9 @@ const getVersions = (filter) => __awaiter(void 0, void 0, void 0, function* () {
                     published,
                     changelogURL,
                     getDownloadURL,
+                    download: (path) => __awaiter(void 0, void 0, void 0, function* () {
+                        return;
+                    }),
                 };
                 const download = (path) => __awaiter(void 0, void 0, void 0, function* () {
                     return yield (0, exports.downloadVersion)(version, path);
@@ -156,11 +159,8 @@ const _checkFilter = (version, filter) => {
     return true;
 };
 // async function main() {
-//     const latestVersion = await (
-//         await getVersions({ minecraftVersion: '1.19.2' })
-//     )[0];
+//     const latestVersion = await getVersions({ minecraftVersion: '1.19.2' })[0];
 //     latestVersion.download('./test.jar');
-//     // await downloadVersion(latestVersion, 'test.jar');
 // }
 // main();
 //# sourceMappingURL=index.js.map

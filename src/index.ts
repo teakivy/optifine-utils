@@ -19,7 +19,7 @@ type Version = {
     minecraftVersion: string;
     published: Date;
     changelogURL: string;
-    download?: (path?: string) => Promise<void>;
+    download: (path?: string) => Promise<void>;
     getDownloadURL: () => Promise<string>;
 };
 
@@ -108,6 +108,9 @@ export const getVersions = async (
                     published,
                     changelogURL,
                     getDownloadURL,
+                    download: async (path?: string) => {
+                        return;
+                    },
                 };
 
                 const download = async (path: string) => {
@@ -191,12 +194,9 @@ const _checkFilter = (version: Version, filter?: GetVersionsFiler): boolean => {
 };
 
 // async function main() {
-//     const latestVersion = await (
-//         await getVersions({ minecraftVersion: '1.19.2' })
-//     )[0];
+//     const latestVersion = await getVersions({ minecraftVersion: '1.19.2' })[0];
 
 //     latestVersion.download('./test.jar');
-//     // await downloadVersion(latestVersion, 'test.jar');
 // }
 
 // main();
