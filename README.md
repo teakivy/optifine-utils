@@ -19,7 +19,7 @@ yarn add optifine-utils
 ```ts
 import { getVersions } from 'optifine-utils';
 
-const version = await (await getVersions({ minecraftVersion: '1.19.2' }))[0];
+const version = await getVersions({ minecraftVersion: '1.19.2' })[0];
 
 version.download('./Optifine_1.19.2.jar');
 ```
