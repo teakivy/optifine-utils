@@ -1,7 +1,7 @@
 {
-    "name": "gofdll",
-    "version": "1.0.0",
-    "description": "Get an Optifine download link by web scraping",
+    "name": "optifine-utils",
+    "version": "1.2.0",
+    "description": "Optifine Utilities",
     "main": "dist/index.js",
     "author": "TeakIvy",
     "license": "MIT",
@@ -17,6 +17,8 @@
         "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts"
     },
     "dependencies": {
+        "axios": "^1.1.2",
         "cheerio": "^1.0.0-rc.12"
-    }
+    },
+    "repository": "https://github.com/teakivy/gofdll"
 }
