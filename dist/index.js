@@ -32,7 +32,7 @@ const AxiosInstance = axios_1.default.create(); // Create a new Axios Instance
 const getDownloadURL = (fileName) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { data } = yield AxiosInstance.get(url.mirror + fileName); // Get the HTML from the URL
+            const { data } = yield AxiosInstance.get(url.mirror + fileName);
             const $ = cheerio_1.default.load(data); // Load the HTML into Cheerio
             const downloadLink = $('#Download > a').attr('href'); // Get the download link from the HTML
             resolve(url.base + '/' + downloadLink); // Resolve the Promise with the download link
@@ -54,8 +54,7 @@ const getVersions = (filter) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { data } = yield AxiosInstance.get(url.download); // Get the HTML from the URL
             const $ = cheerio_1.default.load(data); // Load the HTML into Cheerio
-            const tables = $('.downloadLine'); // Get the download link from the HTML
-            // resolve(url.base + '/' + downloadLink); // Resolve the Promise with the download link
+            const tables = $('.downloadLine');
             const versions = [];
             tables.each((i, table) => {
                 const optifineVersion = $(table).find('.colFile').text();
@@ -146,12 +145,12 @@ const _checkFilter = (version, filter) => {
     }
     return true;
 };
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const latestVersion = yield (yield (0, exports.getVersions)({ minecraftVersion: '1.19.2' }))[0];
-        console.log(latestVersion);
-        // await downloadVersion(latestVersion, 'test.jar');
-    });
-}
-main();
+// async function main() {
+//     const latestVersion = await (
+//         await getVersions({ minecraftVersion: '1.19.2' })
+//     )[0];
+//     console.log(latestVersion);
+//     // await downloadVersion(latestVersion, 'test.jar');
+// }
+// main();
 //# sourceMappingURL=index.js.map

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 import fs from 'fs';
-import https from 'https';
 
 const url = {
     base: 'https://optifine.net',
@@ -20,6 +19,7 @@ type Version = {
     minecraftVersion: string;
     published: Date;
     changelogURL: string;
+    download?: (path?: string) => Promise<void>;
     getDownloadURL: () => Promise<string>;
 };
 
@@ -40,7 +40,7 @@ type GetVersionsFiler = {
 export const getDownloadURL = async (fileName: string): Promise<string> => {
     return new Promise(async (resolve, reject) => {
         try {
-            const { data } = await AxiosInstance.get(url.mirror + fileName); // Get the HTML from the URL
+            const { data } = await AxiosInstance.get(url.mirror + fileName);
             const $ = cheerio.load(data); // Load the HTML into Cheerio
             const downloadLink = $('#Download > a').attr('href'); // Get the download link from the HTML
             resolve(url.base + '/' + downloadLink); // Resolve the Promise with the download link
@@ -64,8 +64,7 @@ export const getVersions = async (
         try {
             const { data } = await AxiosInstance.get(url.download); // Get the HTML from the URL
             const $ = cheerio.load(data); // Load the HTML into Cheerio
-            const tables = $('.downloadLine'); // Get the download link from the HTML
-            // resolve(url.base + '/' + downloadLink); // Resolve the Promise with the download link
+            const tables = $('.downloadLine');
 
             const versions: Version[] = [];
 
@@ -111,6 +110,12 @@ export const getVersions = async (
                     getDownloadURL,
                 };
 
+                const download = async (path: string) => {
+                    return await downloadVersion(version, path);
+                };
+
+                version.download = download;
+
                 if (_checkFilter(version, filter)) {
                     versions.push(version);
                 }
@@ -130,11 +135,20 @@ export const getVersions = async (
  */
 export const downloadVersion = async (
     version: Version,
-    path: string
+    path?: string
 ): Promise<void> => {
     return new Promise(async (resolve, reject) => {
         try {
             const downloadURL = await version.getDownloadURL();
+
+            if (!path) {
+                path = './';
+            }
+
+            if (path.endsWith('/')) {
+                path = path + version.fileName;
+            }
+
             const writer = fs.createWriteStream(path);
 
             const response = await AxiosInstance({
@@ -181,7 +195,7 @@ async function main() {
         await getVersions({ minecraftVersion: '1.19.2' })
     )[0];
 
-    console.log(latestVersion);
+    latestVersion.download('./test.jar');
     // await downloadVersion(latestVersion, 'test.jar');
 }
 
