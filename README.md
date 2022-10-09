@@ -2,6 +2,18 @@
 
 > A scraper to get a information and download links from <a href="https://optifine.net">optifine.net</a>
 
+## Install
+
+```bash
+npm install optifine-utils
+```
+
+or
+
+```bash
+yarn add optifine-utils
+```
+
 ## Quick Start
 
 ```ts
@@ -54,7 +66,7 @@ getDownloadURL(fileName: string): Promise<String>
 #### getVersions
 
 ```ts
-getVersions(filter: GetVersionsFilter): Promise<Version[]>
+getVersions(filter?: GetVersionsFilter): Promise<Version[]>
 ```
 
 ## Credits
