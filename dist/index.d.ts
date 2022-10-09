@@ -7,6 +7,8 @@ declare type Version = {
     changelogURL: string;
     download: (path?: string) => Promise<void>;
     getDownloadURL: () => Promise<string>;
+    install: () => Promise<boolean>;
+    runInstaller: () => Promise<boolean>;
 };
 declare type GetVersionsFiler = {
     optifineVersion?: string;

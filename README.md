@@ -40,6 +40,8 @@ type Version = {
     changelogURL: string;
     getDownloadURL: () => Promise<string>;
     download: (path?: string) => Promise<void>;
+    install: () => Promise<boolean>;
+    runInstaller: () => Promise<boolean>;
 };
 ```
 
@@ -60,11 +62,15 @@ type GetVersionsFiler = {
 
 #### getDownloadURL
 
+Get the download URL of a version
+
 ```ts
 getDownloadURL(fileName: string): Promise<String>
 ```
 
 #### getVersions
+
+Get all avaliable versions on the Optifine downloads site
 
 ```ts
 getVersions(filter?: GetVersionsFilter): Promise<Version[]>
@@ -72,8 +78,26 @@ getVersions(filter?: GetVersionsFilter): Promise<Version[]>
 
 #### downloadVersion
 
+Download a version
+
 ```ts
-downloadVersion(version: Version, path: string): Promise<void>
+downloadVersion(version: Version, path?: string): Promise<void>
+```
+
+#### installVersion
+
+Install Optifine (with default settings) without opening the installer
+
+```ts
+installVersion(version: Version): Promise<boolean>
+```
+
+#### runInstaller
+
+Download and run the Optifine Installer
+
+```ts
+runInstaller(version: Version): Promise<boolean>
 ```
 
 ## Credits

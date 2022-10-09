@@ -24,6 +24,21 @@ const url = {
 url.download = url.base + url.download;
 url.mirror = url.base + url.mirror;
 const AxiosInstance = axios_1.default.create(); // Create a new Axios Instance
+function os_func() {
+    const exec = require('child_process').exec;
+    this.execCommand = function (cmd) {
+        return new Promise((resolve, reject) => {
+            exec(cmd, (error, stdout, stderr) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve(stdout);
+            });
+        });
+    };
+}
+var os = new os_func();
 /**
  * Get the download URL of a version
  * @param fileName The name of the file
@@ -43,7 +58,6 @@ const getDownloadURL = (fileName) => __awaiter(void 0, void 0, void 0, function*
     }));
 });
 exports.getDownloadURL = getDownloadURL;
-const gdu = exports.getDownloadURL;
 /**
  * Get all avaliable versions on the Optifine downloads site
  * @param filter Filter the versions
@@ -72,9 +86,6 @@ const getVersions = (filter) => __awaiter(void 0, void 0, void 0, function* () {
                 const month = dateString.split('.')[1];
                 const year = dateString.split('.')[2];
                 const published = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                const getDownloadURL = () => __awaiter(void 0, void 0, void 0, function* () {
-                    return yield gdu(fileName);
-                });
                 const changelogURL = `${url.base}/${$(table)
                     .find('.colChangelog')
                     .find('a')
@@ -86,15 +97,31 @@ const getVersions = (filter) => __awaiter(void 0, void 0, void 0, function* () {
                     minecraftVersion,
                     published,
                     changelogURL,
-                    getDownloadURL,
+                    getDownloadURL: () => __awaiter(void 0, void 0, void 0, function* () {
+                        return url.base;
+                    }),
                     download: (path) => __awaiter(void 0, void 0, void 0, function* () {
                         return;
                     }),
+                    install: () => __awaiter(void 0, void 0, void 0, function* () {
+                        return false;
+                    }),
+                    runInstaller: () => __awaiter(void 0, void 0, void 0, function* () {
+                        return false;
+                    }),
                 };
-                const download = (path) => __awaiter(void 0, void 0, void 0, function* () {
-                    return yield (0, exports.downloadVersion)(version, path);
+                version.getDownloadURL = () => __awaiter(void 0, void 0, void 0, function* () {
+                    return (0, exports.getDownloadURL)(fileName);
                 });
-                version.download = download;
+                version.download = (path) => __awaiter(void 0, void 0, void 0, function* () {
+                    return (0, exports.downloadVersion)(version, path);
+                });
+                version.install = () => __awaiter(void 0, void 0, void 0, function* () {
+                    return install(version);
+                });
+                version.runInstaller = () => __awaiter(void 0, void 0, void 0, function* () {
+                    return runInstaller(version);
+                });
                 if (_checkFilter(version, filter)) {
                     versions.push(version);
                 }
@@ -143,6 +170,44 @@ const downloadVersion = (version, path) => __awaiter(void 0, void 0, void 0, fun
 });
 exports.downloadVersion = downloadVersion;
 /**
+ * Download and run the Optifine Installer
+ * @param version The version to install
+ * @returns Promise<boolean> If the installation was successful
+ */
+const runInstaller = (version) => __awaiter(void 0, void 0, void 0, function* () {
+    return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
+        let filename = `./${Math.floor(Math.random() * 8999) + 1000}_${version.minecraftVersion}.jar`;
+        yield version.download(filename).then(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield os
+                .execCommand(`java -cp ${filename} optifine.InstallerFrame`, (res) => __awaiter(void 0, void 0, void 0, function* () { }))
+                .catch((err) => {
+                reject(err);
+            });
+            fs_1.default.unlinkSync(filename);
+            resolve(true);
+        }));
+    }));
+});
+/**
+ * Install Optifine (with default settings) without opening the installer
+ * @param version The version to install
+ * @returns Promise<boolean> If the installation was successful
+ */
+const install = (version) => __awaiter(void 0, void 0, void 0, function* () {
+    return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
+        let filename = `./${Math.floor(Math.random() * 9999)}_${version.minecraftVersion}.jar`;
+        yield version.download(filename).then(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield os
+                .execCommand(`java -cp ${filename} optifine.Installer`, (res) => __awaiter(void 0, void 0, void 0, function* () { }))
+                .catch((err) => {
+                reject(err);
+            });
+            fs_1.default.unlinkSync(filename);
+            resolve(true);
+        }));
+    }));
+});
+/**
  * Check if a version matches against a filter
  * @param version The version to check against the filter
  * @param filter The filter to check against the version
@@ -159,8 +224,11 @@ const _checkFilter = (version, filter) => {
     return true;
 };
 // async function main() {
-//     const latestVersion = await getVersions({ minecraftVersion: '1.19.2' })[0];
-//     latestVersion.download('./test.jar');
+//     const latestVersion = (
+//         await getVersions({ minecraftVersion: '1.19.2' })
+//     )[0];
+//     console.log(latestVersion);
+//     await latestVersion.runInstaller();
 // }
 // main();
 //# sourceMappingURL=index.js.map

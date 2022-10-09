@@ -21,6 +21,8 @@ type Version = {
     changelogURL: string;
     download: (path?: string) => Promise<void>;
     getDownloadURL: () => Promise<string>;
+    install: () => Promise<boolean>;
+    runInstaller: () => Promise<boolean>;
 };
 
 type GetVersionsFiler = {
@@ -31,6 +33,22 @@ type GetVersionsFiler = {
     published?: Date;
     changelogURL?: string;
 };
+
+function os_func() {
+    const exec = require('child_process').exec;
+    this.execCommand = function (cmd) {
+        return new Promise((resolve, reject) => {
+            exec(cmd, (error, stdout, stderr) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve(stdout);
+            });
+        });
+    };
+}
+var os = new os_func();
 
 /**
  * Get the download URL of a version
@@ -49,8 +67,6 @@ export const getDownloadURL = async (fileName: string): Promise<string> => {
         }
     });
 };
-
-const gdu = getDownloadURL;
 
 /**
  * Get all avaliable versions on the Optifine downloads site
@@ -91,10 +107,6 @@ export const getVersions = async (
                     parseInt(day)
                 );
 
-                const getDownloadURL = async () => {
-                    return await gdu(fileName);
-                };
-
                 const changelogURL = `${url.base}/${$(table)
                     .find('.colChangelog')
                     .find('a')
@@ -107,17 +119,35 @@ export const getVersions = async (
                     minecraftVersion,
                     published,
                     changelogURL,
-                    getDownloadURL,
+                    getDownloadURL: async () => {
+                        return url.base;
+                    },
                     download: async (path?: string) => {
                         return;
                     },
+                    install: async () => {
+                        return false;
+                    },
+                    runInstaller: async () => {
+                        return false;
+                    },
                 };
 
-                const download = async (path: string) => {
-                    return await downloadVersion(version, path);
+                version.getDownloadURL = async (): Promise<string> => {
+                    return getDownloadURL(fileName);
                 };
 
-                version.download = download;
+                version.download = async (path?: string): Promise<void> => {
+                    return downloadVersion(version, path);
+                };
+
+                version.install = async (): Promise<boolean> => {
+                    return install(version);
+                };
+
+                version.runInstaller = async (): Promise<boolean> => {
+                    return runInstaller(version);
+                };
 
                 if (_checkFilter(version, filter)) {
                     versions.push(version);
@@ -176,6 +206,58 @@ export const downloadVersion = async (
 };
 
 /**
+ * Download and run the Optifine Installer
+ * @param version The version to install
+ * @returns Promise<boolean> If the installation was successful
+ */
+const runInstaller = async (version: Version): Promise<boolean> => {
+    return new Promise(async (resolve, reject) => {
+        let filename = `./${Math.floor(Math.random() * 8999) + 1000}_${
+            version.minecraftVersion
+        }.jar`;
+        await version.download(filename).then(async () => {
+            await os
+                .execCommand(
+                    `java -cp ${filename} optifine.InstallerFrame`,
+                    async (res) => {}
+                )
+                .catch((err) => {
+                    reject(err);
+                });
+
+            fs.unlinkSync(filename);
+            resolve(true);
+        });
+    });
+};
+
+/**
+ * Install Optifine (with default settings) without opening the installer
+ * @param version The version to install
+ * @returns Promise<boolean> If the installation was successful
+ */
+const install = async (version: Version): Promise<boolean> => {
+    return new Promise(async (resolve, reject) => {
+        let filename = `./${Math.floor(Math.random() * 9999)}_${
+            version.minecraftVersion
+        }.jar`;
+        await version.download(filename).then(async () => {
+            await os
+                .execCommand(
+                    `java -cp ${filename} optifine.Installer`,
+                    async (res) => {}
+                )
+                .catch((err) => {
+                    reject(err);
+                });
+
+            fs.unlinkSync(filename);
+            resolve(true);
+        });
+    });
+};
+
+/**
  * Check if a version matches against a filter
  * @param version The version to check against the filter
  * @param filter The filter to check against the version
@@ -194,9 +276,13 @@ const _checkFilter = (version: Version, filter?: GetVersionsFiler): boolean => {
 };
 
 // async function main() {
-//     const latestVersion = await getVersions({ minecraftVersion: '1.19.2' })[0];
+//     const latestVersion = (
+//         await getVersions({ minecraftVersion: '1.19.2' })
+//     )[0];
 
-//     latestVersion.download('./test.jar');
+//     console.log(latestVersion);
+
+//     await latestVersion.runInstaller();
 // }
 
 // main();
