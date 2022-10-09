@@ -36,7 +36,7 @@ type Version = {
     fileName: string;
     forgeVersion: string;
     minecraftVersion: string;
-    published: Date | string;
+    published: Date;
     changelogURL: string;
     getDownloadURL: () => Promise<string>;
 };
@@ -50,7 +50,7 @@ type GetVersionsFiler = {
     fileName?: string;
     forgeVersion?: string;
     minecraftVersion?: string;
-    published?: Date | string;
+    published?: Date;
     changelogURL?: string;
 };
 ```
