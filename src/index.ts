@@ -12,7 +12,7 @@ url.mirror = url.base + url.mirror;
 
 const AxiosInstance = axios.create(); // Create a new Axios Instance
 
-type Version = {
+export type Version = {
     optifineVersion: string;
     fileName: string;
     forgeVersion: string;
@@ -25,7 +25,7 @@ type Version = {
     runInstaller: () => Promise<boolean>;
 };
 
-type GetVersionsFiler = {
+export type GetVersionsFiler = {
     optifineVersion?: string;
     fileName?: string;
     forgeVersion?: string;

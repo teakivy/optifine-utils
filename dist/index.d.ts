@@ -1,4 +1,4 @@
-declare type Version = {
+export declare type Version = {
     optifineVersion: string;
     fileName: string;
     forgeVersion: string;
@@ -10,7 +10,7 @@ declare type Version = {
     install: () => Promise<boolean>;
     runInstaller: () => Promise<boolean>;
 };
-declare type GetVersionsFiler = {
+export declare type GetVersionsFiler = {
     optifineVersion?: string;
     fileName?: string;
     forgeVersion?: string;
@@ -36,4 +36,3 @@ export declare const getVersions: (filter?: GetVersionsFiler) => Promise<Version
  * @param path The path to download the version to
  */
 export declare const downloadVersion: (version: Version, path?: string) => Promise<void>;
-export {};
