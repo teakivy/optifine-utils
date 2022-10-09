@@ -1,6 +1,6 @@
 # Optifine Utils
 
-> A scraper to get a information and download links from <a href="https://optifine.net">optifine.net</a>
+> A scraper to get a information about and download jar files from <a href="https://optifine.net">optifine.net</a>
 
 ## Install
 
@@ -67,6 +67,12 @@ getDownloadURL(fileName: string): Promise<String>
 
 ```ts
 getVersions(filter?: GetVersionsFilter): Promise<Version[]>
+```
+
+#### downloadVersion
+
+```ts
+getVersions(version: Version, path: string): Promise<void>
 ```
 
 ## Credits

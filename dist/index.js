@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getVersions = exports.getDownloadURL = void 0;
+exports.downloadVersion = exports.getVersions = exports.getDownloadURL = void 0;
 const axios_1 = __importDefault(require("axios"));
 const cheerio_1 = __importDefault(require("cheerio"));
+const fs_1 = __importDefault(require("fs"));
 const url = {
     base: 'https://optifine.net',
     download: '/downloads',
@@ -101,6 +102,35 @@ const getVersions = (filter) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getVersions = getVersions;
 /**
+ * Download a version
+ * @param version The version to download
+ * @param path The path to download the version to
+ */
+const downloadVersion = (version, path) => __awaiter(void 0, void 0, void 0, function* () {
+    return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const downloadURL = yield version.getDownloadURL();
+            const writer = fs_1.default.createWriteStream(path);
+            const response = yield AxiosInstance({
+                url: downloadURL,
+                method: 'GET',
+                responseType: 'stream',
+            });
+            response.data.pipe(writer);
+            writer.on('finish', () => {
+                resolve();
+            });
+            writer.on('error', (error) => {
+                reject(error);
+            });
+        }
+        catch (error) {
+            reject(error);
+        }
+    }));
+});
+exports.downloadVersion = downloadVersion;
+/**
  * Check if a version matches against a filter
  * @param version The version to check against the filter
  * @param filter The filter to check against the version
@@ -109,37 +139,19 @@ exports.getVersions = getVersions;
 const _checkFilter = (version, filter) => {
     if (!filter)
         return true;
-    if (filter.optifineVersion) {
-        if (version.optifineVersion !== filter.optifineVersion)
+    for (let check of Object.keys(filter)) {
+        if (filter[check] !== version[check]) {
             return false;
-    }
-    if (filter.fileName) {
-        if (version.fileName !== filter.fileName)
-            return false;
-    }
-    if (filter.forgeVersion) {
-        if (version.forgeVersion !== filter.forgeVersion)
-            return false;
-    }
-    if (filter.minecraftVersion) {
-        if (version.minecraftVersion !== filter.minecraftVersion)
-            return false;
-    }
-    if (filter.published) {
-        if (version.published !== filter.published)
-            return false;
-    }
-    if (filter.changelogURL) {
-        if (version.changelogURL !== filter.changelogURL)
-            return false;
+        }
     }
     return true;
 };
-// async function main() {
-//     const latestVersion = await (
-//         await getVersions({ minecraftVersion: '1.19.2' })
-//     )[0].getDownloadURL();
-//     console.log(latestVersion);
-// }
-// main();
+function main() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const latestVersion = yield (yield (0, exports.getVersions)({ minecraftVersion: '1.19.2' }))[0];
+        console.log(latestVersion);
+        // await downloadVersion(latestVersion, 'test.jar');
+    });
+}
+main();
 //# sourceMappingURL=index.js.map

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
+import fs from 'fs';
+import https from 'https';
 
 const url = {
     base: 'https://optifine.net',
@@ -122,46 +124,65 @@ export const getVersions = async (
 };
 
 /**
+ * Download a version
+ * @param version The version to download
+ * @param path The path to download the version to
+ */
+export const downloadVersion = async (
+    version: Version,
+    path: string
+): Promise<void> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const downloadURL = await version.getDownloadURL();
+            const writer = fs.createWriteStream(path);
+
+            const response = await AxiosInstance({
+                url: downloadURL,
+                method: 'GET',
+                responseType: 'stream',
+            });
+
+            response.data.pipe(writer);
+
+            writer.on('finish', () => {
+                resolve();
+            });
+
+            writer.on('error', (error) => {
+                reject(error);
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+/**
  * Check if a version matches against a filter
  * @param version The version to check against the filter
  * @param filter The filter to check against the version
  * @returns boolean If the version matches against the filter
  */
-const _checkFilter = (version: Version, filter?: GetVersionsFiler) => {
+const _checkFilter = (version: Version, filter?: GetVersionsFiler): boolean => {
     if (!filter) return true;
 
-    if (filter.optifineVersion) {
-        if (version.optifineVersion !== filter.optifineVersion) return false;
-    }
-
-    if (filter.fileName) {
-        if (version.fileName !== filter.fileName) return false;
-    }
-
-    if (filter.forgeVersion) {
-        if (version.forgeVersion !== filter.forgeVersion) return false;
-    }
-
-    if (filter.minecraftVersion) {
-        if (version.minecraftVersion !== filter.minecraftVersion) return false;
-    }
-
-    if (filter.published) {
-        if (version.published !== filter.published) return false;
-    }
-
-    if (filter.changelogURL) {
-        if (version.changelogURL !== filter.changelogURL) return false;
+    for (let check of Object.keys(filter)) {
+        if (filter[check] !== version[check]) {
+            return false;
+        }
     }
 
     return true;
 };
 
-// async function main() {
-//     const latestVersion = await (
-//         await getVersions({ minecraftVersion: '1.19.2' })
-//     )[0].getDownloadURL();
-//     console.log(latestVersion);
-// }
+async function main() {
+    const latestVersion = await (
+        await getVersions({ minecraftVersion: '1.19.2' })
+    )[0];
 
-// main();
+    console.log(latestVersion);
+    // await downloadVersion(latestVersion, 'test.jar');
+}
+
+main();
