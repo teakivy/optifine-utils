@@ -21,5 +21,23 @@
         "axios": "^1.1.2",
         "cheerio": "^1.0.0-rc.12"
     },
-    "repository": "https://github.com/teakivy/optifine-utils"
+    "repository": "https://github.com/teakivy/optifine-utils",
+    "keywords": [
+        "optifine",
+        "minecraft",
+        "utils",
+        "launcher",
+        "scraping",
+        "mc",
+        "es6",
+        "commonjs",
+        "java edition",
+        "java",
+        "forge",
+        "fabric",
+        "mod",
+        "mods",
+        "modloader",
+        "backend"
+    ]
 }
