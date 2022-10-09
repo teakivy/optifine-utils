@@ -75,7 +75,7 @@ getVersions(filter?: GetVersionsFilter): Promise<Version[]>
 #### downloadVersion
 
 ```ts
-getVersions(version: Version, path: string): Promise<void>
+downloadVersion(version: Version, path: string): Promise<void>
 ```
 
 ## Credits
