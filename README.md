@@ -40,7 +40,7 @@ type Version = {
     minecraftVersion: string;
     published: Date;
     changelogURL: string;
-    download: (path?: string) => Promise<void>;
+    download?: (path?: string) => Promise<void>;
     getDownloadURL: () => Promise<string>;
 };
 ```
