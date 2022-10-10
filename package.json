@@ -1,6 +1,6 @@
 {
     "name": "optifine-utils",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "description": "Optifine Utilities",
     "main": "dist/index.js",
     "author": "TeakIvy",
