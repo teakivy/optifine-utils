@@ -36,3 +36,15 @@ export declare const getVersions: (filter?: GetVersionsFiler) => Promise<Version
  * @param path The path to download the version to
  */
 export declare const downloadVersion: (version: Version, path?: string) => Promise<void>;
+/**
+ * Download and run the Optifine Installer
+ * @param version The version to install
+ * @returns Promise<boolean> If the installation was successful
+ */
+export declare const runInstaller: (version: Version) => Promise<boolean>;
+/**
+ * Install Optifine (with default settings) without opening the installer
+ * @param version The version to install
+ * @returns Promise<boolean> If the installation was successful
+ */
+export declare const installVersion: (version: Version) => Promise<boolean>;

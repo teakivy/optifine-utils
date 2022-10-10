@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.downloadVersion = exports.getVersions = exports.getDownloadURL = void 0;
+exports.installVersion = exports.runInstaller = exports.downloadVersion = exports.getVersions = exports.getDownloadURL = void 0;
 const axios_1 = __importDefault(require("axios"));
 const cheerio_1 = __importDefault(require("cheerio"));
 const fs_1 = __importDefault(require("fs"));
@@ -117,10 +117,10 @@ const getVersions = (filter) => __awaiter(void 0, void 0, void 0, function* () {
                     return (0, exports.downloadVersion)(version, path);
                 });
                 version.install = () => __awaiter(void 0, void 0, void 0, function* () {
-                    return install(version);
+                    return (0, exports.installVersion)(version);
                 });
                 version.runInstaller = () => __awaiter(void 0, void 0, void 0, function* () {
-                    return runInstaller(version);
+                    return (0, exports.runInstaller)(version);
                 });
                 if (_checkFilter(version, filter)) {
                     versions.push(version);
@@ -188,12 +188,13 @@ const runInstaller = (version) => __awaiter(void 0, void 0, void 0, function* ()
         }));
     }));
 });
+exports.runInstaller = runInstaller;
 /**
  * Install Optifine (with default settings) without opening the installer
  * @param version The version to install
  * @returns Promise<boolean> If the installation was successful
  */
-const install = (version) => __awaiter(void 0, void 0, void 0, function* () {
+const installVersion = (version) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         let filename = `./${Math.floor(Math.random() * 9999)}_${version.minecraftVersion}.jar`;
         yield version.download(filename).then(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -207,6 +208,7 @@ const install = (version) => __awaiter(void 0, void 0, void 0, function* () {
         }));
     }));
 });
+exports.installVersion = installVersion;
 /**
  * Check if a version matches against a filter
  * @param version The version to check against the filter

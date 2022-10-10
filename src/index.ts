@@ -142,7 +142,7 @@ export const getVersions = async (
                 };
 
                 version.install = async (): Promise<boolean> => {
-                    return install(version);
+                    return installVersion(version);
                 };
 
                 version.runInstaller = async (): Promise<boolean> => {
@@ -210,7 +210,7 @@ export const downloadVersion = async (
  * @param version The version to install
  * @returns Promise<boolean> If the installation was successful
  */
-const runInstaller = async (version: Version): Promise<boolean> => {
+export const runInstaller = async (version: Version): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
         let filename = `./${Math.floor(Math.random() * 8999) + 1000}_${
             version.minecraftVersion
@@ -236,7 +236,7 @@ const runInstaller = async (version: Version): Promise<boolean> => {
  * @param version The version to install
  * @returns Promise<boolean> If the installation was successful
  */
-const install = async (version: Version): Promise<boolean> => {
+export const installVersion = async (version: Version): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
         let filename = `./${Math.floor(Math.random() * 9999)}_${
             version.minecraftVersion
