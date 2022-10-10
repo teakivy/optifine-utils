@@ -177,7 +177,7 @@ exports.downloadVersion = downloadVersion;
 const runInstaller = (version) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         let filename = `./${Math.floor(Math.random() * 8999) + 1000}_${version.minecraftVersion}.jar`;
-        yield version.download(filename).then(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, exports.downloadVersion)(version, filename).then(() => __awaiter(void 0, void 0, void 0, function* () {
             yield os
                 .execCommand(`java -cp ${filename} optifine.InstallerFrame`, (res) => __awaiter(void 0, void 0, void 0, function* () { }))
                 .catch((err) => {
@@ -197,7 +197,7 @@ exports.runInstaller = runInstaller;
 const installVersion = (version) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         let filename = `./${Math.floor(Math.random() * 9999)}_${version.minecraftVersion}.jar`;
-        yield version.download(filename).then(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, exports.downloadVersion)(version, filename).then(() => __awaiter(void 0, void 0, void 0, function* () {
             yield os
                 .execCommand(`java -cp ${filename} optifine.Installer`, (res) => __awaiter(void 0, void 0, void 0, function* () { }))
                 .catch((err) => {

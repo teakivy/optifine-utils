@@ -215,7 +215,7 @@ export const runInstaller = async (version: Version): Promise<boolean> => {
         let filename = `./${Math.floor(Math.random() * 8999) + 1000}_${
             version.minecraftVersion
         }.jar`;
-        await version.download(filename).then(async () => {
+        await downloadVersion(version, filename).then(async () => {
             await os
                 .execCommand(
                     `java -cp ${filename} optifine.InstallerFrame`,
@@ -241,7 +241,7 @@ export const installVersion = async (version: Version): Promise<boolean> => {
         let filename = `./${Math.floor(Math.random() * 9999)}_${
             version.minecraftVersion
         }.jar`;
-        await version.download(filename).then(async () => {
+        await downloadVersion(version, filename).then(async () => {
             await os
                 .execCommand(
                     `java -cp ${filename} optifine.Installer`,
