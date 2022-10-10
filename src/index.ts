@@ -172,7 +172,7 @@ export const downloadVersion = async (
 ): Promise<void> => {
     return new Promise(async (resolve, reject) => {
         try {
-            const downloadURL = await version.getDownloadURL();
+            const downloadURL = await getDownloadURL(version.fileName);
 
             if (!path) {
                 path = './';

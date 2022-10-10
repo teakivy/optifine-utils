@@ -142,7 +142,7 @@ exports.getVersions = getVersions;
 const downloadVersion = (version, path) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const downloadURL = yield version.getDownloadURL();
+            const downloadURL = yield (0, exports.getDownloadURL)(version.fileName);
             if (!path) {
                 path = './';
             }
